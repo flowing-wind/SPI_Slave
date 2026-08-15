@@ -15,7 +15,6 @@ proc libcells {pat} {
 
 # -------------------------------
 #  Parasitics
-#    routing changed everything -> re-extract with the real engine
 # -------------------------------
 
 setExtractRCMode -engine postRoute

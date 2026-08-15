@@ -71,7 +71,7 @@ defOut -floorplan -netlist -routing $OUT_DIR/${DESIGN}.def
 streamOut $OUT_DIR/${DESIGN}.gds \
           -mapFile $GDS_MAP \
           -merge   $STD_GDS \
-          -units 2000 -mode ALL
+          -units 1000 -mode ALL
 
 saveDesign ./data/chipfinish.enc
 

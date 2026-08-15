@@ -1,0 +1,5 @@
+INCLUDE /home/yangh/project/PDK/tsmc18/cds.lib
+
+DEFINE spi_core /home/yangh/project/SPI_Slave/post/Virtuoso/libs/spi_core
+DEFINE spi_chip /home/yangh/project/SPI_Slave/post/Virtuoso/libs/spi_chip
+DEFINE tsmc18_io /home/yangh/project/SPI_Slave/post/Virtuoso/libs/tsmc18_io

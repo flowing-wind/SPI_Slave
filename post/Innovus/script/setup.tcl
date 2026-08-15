@@ -59,14 +59,14 @@ set QRC_MIN      "$QRC_DIR/RC_QRC_cm018g_1p6m_4x1u_mim5_40k_cbest/qrcTechFile"
 # -------------------------------
 
 set STD_GDS      "$BE/gds/tcb018gbwp7t_270a/tcb018gbwp7t.gds"
-set GDS_MAP      "$180_MS_RF_G/APR_Tech/018G_6lm4X1U_40KUTM_Syn/PR_tech/Synopsys/GdsOutMap/gdsout.map"
+set GDS_MAP      "$BE/lef/tcb018gbwp7t_270a/techfiles/gds2.map"
 
 # -------------------------------
 #  Input copied from DC/FM
 # -------------------------------
 
 set NETLIST      "$PNR/input/${DESIGN}_netlist.v"
-set SDC_FILE     "$PRJ/constraints/spi_slave.sdc"   ;# shared with DC
+set SDC_FILE     "$PRJ/constraints/spi_slave.sdc"
 
 # -------------------------------
 #  Output

@@ -1,0 +1,21 @@
+#*****************************************************************************
+#  TSMC 0.18UM  Layout Editor Font File - font.map, 11/03/2009
+#  For TSMC 0.18UM CMOS LOGIC/MS/RF AND 0.16UM CMOS LOGIC/MS 1P6M PROCESS
+#           (CL018G/LV/LP, CM018, CR018, CL016G, CM016)
+#  Technology File Document: T-018-LO-LE-004 Ver 2.8b_pre110309
+#*****************************************************************************
+#################################
+#                               #
+#          OPUS-STREAM          # 
+#     TEXT FONT MAP TABLE       #
+#                               #
+#################################
+#
+#OPUS    STREAM     Font
+#Font     Font     Height     
+#------------------------------
+ stick     0        0.5
+ roman     1        0.5
+ gothic    2        0.5
+ script    3        0.5
+#
