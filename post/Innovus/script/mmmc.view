@@ -1,0 +1,44 @@
+# Multi-Mode Multi-Corner
+#   view_slow = wc x cworst x func -> setup
+#   view_fast = bc x cbest  x func -> hold
+
+# -------------------------------
+#  Library set
+# -------------------------------
+
+create_library_set -name libset_wc -timing [list $LIB_WC]
+create_library_set -name libset_bc -timing [list $LIB_BC]
+
+# -------------------------------
+#  RC corner
+# -------------------------------
+
+create_rc_corner -name rc_cworst -qx_tech_file $QRC_MAX -T 125
+create_rc_corner -name rc_cbest  -qx_tech_file $QRC_MIN -T 0
+
+# -------------------------------
+#  Delay corner
+# -------------------------------
+
+create_delay_corner -name dc_slow -library_set libset_wc -rc_corner rc_cworst
+create_delay_corner -name dc_fast -library_set libset_bc -rc_corner rc_cbest
+
+# -------------------------------
+#  Constraint mode
+# -------------------------------
+
+# same SDC as DC; propagated clock is set after CTS (clock_opt_cts.tcl)
+create_constraint_mode -name func -sdc_files [list $SDC_FILE]
+
+# -------------------------------
+#  Analysis view
+# -------------------------------
+
+create_analysis_view -name view_slow -constraint_mode func -delay_corner dc_slow
+create_analysis_view -name view_fast -constraint_mode func -delay_corner dc_fast
+
+# -------------------------------
+#  Activate
+# -------------------------------
+
+set_analysis_view -setup {view_slow} -hold {view_fast}

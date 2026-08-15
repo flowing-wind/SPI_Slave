@@ -1,0 +1,43 @@
+set designer "Eric Yang"
+set company  "ShanghaiTech"
+
+set NLDM       "/home/yangh/project/PDK/TSMCHOME/digital/Front_End/timing_power_noise/NLDM"
+set STD_PATH   "$NLDM/tcb018gbwp7t_270a"
+
+set PRJ         "/home/yangh/project/SPI_Slave"
+set RTL_PATH    "$PRJ/rtl"
+set SCRIPT_PATH "$PRJ/post/DC/script"
+
+set_app_var search_path \
+    [concat $search_path $STD_PATH $RTL_PATH $SCRIPT_PATH]
+
+set_app_var target_library "tcb018gbwp7twc.db"
+
+# Core only, no IO lib: any leftover pad reference fails at link
+set_app_var link_library \
+    [concat "*" $target_library "dw_foundation.sldb" "standard.sldb"]
+
+set_app_var symbol_library    ""
+set_app_var synthetic_library "dw_foundation.sldb"
+
+set_app_var verilogout_no_tri              true
+set_app_var compile_fix_multiple_port_nets true
+set_app_var write_name_nets_same_as_ports  true
+
+set_app_var sh_command_log_file "./command.log"
+
+alias h  history
+alias rc "report_constraint -all_violators"
+alias rt report_timing
+alias ra report_area
+alias rq report_qor
+alias fr "remove_design -designs"
+alias page_on  {set_app_var sh_enable_page_mode true}
+alias page_off {set_app_var sh_enable_page_mode false}
+
+echo "\n=================================================="
+echo "  search_path    : $search_path"
+echo "  target_library : $target_library"
+echo "  link_library   : $link_library"
+echo "==================================================\n"
+echo "I am ready...\n"

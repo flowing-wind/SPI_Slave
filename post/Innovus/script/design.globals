@@ -1,0 +1,15 @@
+# Top
+set init_top_cell    $DESIGN
+
+# Netlist
+set init_verilog     $NETLIST
+
+# LEF
+set init_lef_file    $LEF_FILES
+
+# Power (core only)
+set init_pwr_net     $PWR_NET
+set init_gnd_net     $GND_NET
+
+# MMMC
+set init_mmmc_file   "$PNR/script/mmmc.view"
