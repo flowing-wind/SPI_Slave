@@ -34,11 +34,11 @@ redirect -file $RPT_DIR/timing.rpt {
     report_timing -delay_type min -max_paths 20 -nworst 2 -nosplit
 }
 
-
 echo "\n============================================================"
 echo "  Netlist : $OUT_DIR/${DESIGN_NAME}_netlist.v"
 echo "  SDC     : $OUT_DIR/${DESIGN_NAME}.sdc"
 echo "  Report  : $RPT_DIR/summary.rpt"
 echo "            $RPT_DIR/timing.rpt"
+echo "  Copy Netlist file to ../Innovus/input"
 echo "============================================================\n"
 echo ">>> post_dc.tcl DONE\n"
