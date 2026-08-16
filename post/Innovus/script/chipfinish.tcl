@@ -47,7 +47,7 @@ timeDesign -postRoute -hold -pathreports -slackReports \
 # -------------------------------
 #  Export
 #    - *_pr.v   : logical netlist, post-layout sim + LVS schematic source
-#    - *_lvs.v  : + physical-only cells (filler/welltap) + PG, for LVS
+#    - *_lvs.v  : + PG, for LVS
 #    - .sdf     : post-layout sim
 #    - .spef    : signoff STA
 #    - .def     : record of placement/routing
@@ -56,9 +56,7 @@ timeDesign -postRoute -hold -pathreports -slackReports \
 
 saveNetlist $OUT_DIR/${DESIGN}_pr.v -excludeLeafCell
 
-set phys_cells [concat $fill_cells [libcells TAPCELL*]]
-saveNetlist $OUT_DIR/${DESIGN}_lvs.v -excludeLeafCell \
-            -includePhysicalCell $phys_cells -includePowerGround
+saveNetlist $OUT_DIR/${DESIGN}_lvs.v -excludeLeafCell -includePowerGround
 
 write_sdf -min_view view_fast -max_view view_slow $OUT_DIR/${DESIGN}_minmax.sdf
 

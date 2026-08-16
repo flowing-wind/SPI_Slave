@@ -59,7 +59,7 @@ set QRC_MIN      "$QRC_DIR/RC_QRC_cm018g_1p6m_4x1u_mim5_40k_cbest/qrcTechFile"
 # -------------------------------
 
 set STD_GDS      "$BE/gds/tcb018gbwp7t_270a/tcb018gbwp7t.gds"
-set GDS_MAP      "$BE/lef/tcb018gbwp7t_270a/techfiles/gds2.map"
+set GDS_MAP      "$BE/lef/tcb018gbwp7t_270a/techfiles/gds2_new.map"
 
 # -------------------------------
 #  Input copied from DC/FM
