@@ -32,6 +32,8 @@ module tb_spi_slave;
         bit [6:0]  addr,
         bit [15:0] data
     );
+        option.per_instance = 1;
+
         // Cover both read and write
         cp_rw : coverpoint rw {
             bins write = {1'b0};
