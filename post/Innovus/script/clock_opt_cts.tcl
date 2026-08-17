@@ -86,8 +86,9 @@ source ./reports/cts/clock.spec
 # -------------------------------
 
 ccopt_design -cts
-# NOTE: no set_propagated_clock needed -- ccopt does it itself, see
-# "Setting all clocks to propagated mode." in the log (with IO latency update)
+
+refinePlace
+checkPlace
 
 # -------------------------------
 #  Sanity Check
