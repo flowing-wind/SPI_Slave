@@ -12,8 +12,8 @@
 #  PARA
 # -------------------------------
 
-set CLK_PERIOD  10.0                            ;# 100 MHz
-set CLK_HIGH    [expr {0.40 * $CLK_PERIOD}]     ;# worst duty cycle 40%
+set CLK_PERIOD  100.0                           ;# 10 MHz
+set CLK_HIGH    [expr {0.60 * $CLK_PERIOD}]     ;# worst duty cycle 60%
 set CLK_LOW     [expr {$CLK_PERIOD - $CLK_HIGH}]
 
 # how late mosi may settle after the master's falling edge
