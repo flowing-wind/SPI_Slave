@@ -27,7 +27,7 @@ floorPlan -site core7T -d $DIE_W $DIE_H $MARGIN $MARGIN $MARGIN $MARGIN
 
 setPinAssignMode -pinEditInBatch true
 
-editPin -pin {sck rst_n mosi ssn miso miso_oen} \
+editPin -pin {rst_n sck ssn mosi miso_oen miso} \
         -edge 1 -layer METAL2 \
         -spreadType side -spreadDirection clockwise \
         -offsetStart 20 -offsetEnd 20 \
