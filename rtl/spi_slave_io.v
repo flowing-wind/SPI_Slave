@@ -15,10 +15,7 @@ module spi_slave_io (
     wire rst_n_i, ssn_i, sck_i, mosi_i;
     wire miso_o, miso_oen;
 
-    spi_slave #(
-        // .DW     (16),
-        // .AW     (3)
-    ) u_core (
+    spi_slave u_core (
         .rst_n      (rst_n_i),
         .ssn        (ssn_i),
         .sck        (sck_i),
