@@ -73,9 +73,23 @@ streamOut $OUT_DIR/${DESIGN}.gds \
 
 saveDesign ./data/chipfinish.enc
 
+# # -------------------------------
+# #  Density with fillers over 100%
+# # -------------------------------
+# deleteFiller -prefix FILLER
+
+# refinePlace
+# ecoRoute
+# checkPlace
+
+# verifyConnectivity -type all  
+# verify_drc -limit 100
+
+# source script/chipfinish.tcl
+
 banner "STAGE 8 COMPLETE"
 echo "\n============================================================"
-echo "  Hand-off to Virtuoso:"
+echo "  Generate:"
 echo "      GDS     : $OUT_DIR/${DESIGN}.gds"
 echo "      LVS     : $OUT_DIR/${DESIGN}_lvs.v"
 echo "      Netlist : $OUT_DIR/${DESIGN}_pr.v"
@@ -83,4 +97,11 @@ echo "      SDF     : $OUT_DIR/${DESIGN}_minmax.sdf"
 echo "      SPEF    : $OUT_DIR/${DESIGN}.spef"
 echo "  Copy GDS to ../Virtuoso/input"
 echo "  Copy lvs.v to ../Virtuoso/verify/lvs"
+echo "============================================================\n"
+
+echo "\n============================================================"
+echo "  Next steps:"
+echo "      1) Check ./reports/chipfinish"
+echo "      2) Check if density with fillers over 100%"
+echo "      3) source script/chipfinish.tcl"
 echo "============================================================\n"
