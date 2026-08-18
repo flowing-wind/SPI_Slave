@@ -46,17 +46,17 @@ timeDesign -postRoute -hold -pathreports -slackReports \
 
 # -------------------------------
 #  Export
-#    - *_pr.v   : logical netlist, post-layout sim + LVS schematic source
-#    - *_lvs.v  : + PG, for LVS
-#    - .sdf     : post-layout sim
-#    - .spef    : signoff STA
-#    - .def     : record of placement/routing
-#    - .gds     : import into Virtuoso, hand connect to the pad ring
+#    - *_lvs.v      : logical netlist without PowerGround
+#    - *_pg_lvs.v   : netlist with PowerGround
+#    - .sdf         : post-layout sim
+#    - .spef        : signoff STA
+#    - .def         : record of placement/routing
+#    - .gds         : import into Virtuoso, hand connect to the pad ring
 # -------------------------------
 
-saveNetlist $OUT_DIR/${DESIGN}_pr.v -excludeLeafCell
+saveNetlist $OUT_DIR/${DESIGN}_lvs.v -excludeLeafCell
 
-saveNetlist $OUT_DIR/${DESIGN}_lvs.v -excludeLeafCell -includePowerGround
+saveNetlist $OUT_DIR/${DESIGN}_pg_lvs.v -excludeLeafCell -includePowerGround
 
 write_sdf -min_view view_fast -max_view view_slow $OUT_DIR/${DESIGN}_minmax.sdf
 
@@ -91,8 +91,8 @@ banner "STAGE 8 COMPLETE"
 echo "\n============================================================"
 echo "  Generate:"
 echo "      GDS     : $OUT_DIR/${DESIGN}.gds"
-echo "      LVS     : $OUT_DIR/${DESIGN}_lvs.v"
-echo "      Netlist : $OUT_DIR/${DESIGN}_pr.v"
+echo "      Netlist : $OUT_DIR/${DESIGN}_lvs.v"
+echo "                $OUT_DIR/${DESIGN}_pg_lvs.v"
 echo "      SDF     : $OUT_DIR/${DESIGN}_minmax.sdf"
 echo "      SPEF    : $OUT_DIR/${DESIGN}.spef"
 echo "============================================================\n"
