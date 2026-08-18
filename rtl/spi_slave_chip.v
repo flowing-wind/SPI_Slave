@@ -5,6 +5,11 @@
 // ============================================================================
 
 module spi_slave_chip (
+    inout  wire     VDD,
+    inout  wire     VSS,
+    inout  wire     VDDPST,
+    inout  wire     VSSPST,
+
     inout  wire     pad_rst_n,
     inout  wire     pad_ssn,
     inout  wire     pad_sck,
