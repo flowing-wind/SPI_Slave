@@ -1,10 +1,10 @@
 // ============================================================================
-//  spi_slave_io.v     v1.0
+//  spi_slave_chip.v     v1.0
 //  
-//  SPI SLAVE IO   BY Eric Yang    2026.08
+//  SPI SLAVE CHIP   BY Eric Yang    2026.08
 // ============================================================================
 
-module spi_slave_io (
+module spi_slave_chip (
     inout  wire     pad_rst_n,
     inout  wire     pad_ssn,
     inout  wire     pad_sck,
@@ -14,6 +14,12 @@ module spi_slave_io (
 
     wire rst_n_i, ssn_i, sck_i, mosi_i;
     wire miso_o, miso_oen;
+
+    // ---- power pads (LVS only) ----
+    PVDD1CDG  u_pvdd1 (.VDD(VDD));
+    PVSS1CDG  u_pvss1 (.VSS(VSS));
+    PVDD2POC  u_poc   (.VDDPST(VDDPST));
+    PVSS2CDG  u_pvss2 (.VSSPST(VSSPST));
 
     spi_slave u_core (
         .rst_n      (rst_n_i),
