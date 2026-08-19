@@ -1,2 +1,3 @@
 1. Copy _pg_lvs.v here
 2. Add VDD VSS port in the top module
+3. Add inout VDD; inout VSS; to declare
