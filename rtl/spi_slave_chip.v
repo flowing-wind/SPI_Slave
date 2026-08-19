@@ -41,32 +41,32 @@ module spi_slave_chip (
     // ---- inputs ----
     PRUW0812SCDG u_pad_rst_n (
         .PAD (pad_rst_n), .C (rst_n_i),
-        .I   (1'b0), .OEN (1'b1), .IE (1'b1), .PE (1'b1), .DS (1'b1),
+        .I   (VSS), .OEN (VDD), .IE (VDD), .PE (VDD), .DS (VDD),
         .VDD (VDD), .VSS(VSS), .VDDPST(VDDPST), .VSSPST(VSSPST), .POC(POC)
     );
 
     PRUW0812SCDG u_pad_ssn (
         .PAD (pad_ssn), .C (ssn_i),
-        .I   (1'b0), .OEN (1'b1), .IE (1'b1), .PE (1'b1), .DS (1'b1),
+        .I   (VSS), .OEN (VDD), .IE (VDD), .PE (VDD), .DS (VDD),
         .VDD (VDD), .VSS(VSS), .VDDPST(VDDPST), .VSSPST(VSSPST), .POC(POC)
     );
 
     PRDW0812SCDG u_pad_sck (
         .PAD (pad_sck), .C (sck_i),
-        .I   (1'b0), .OEN (1'b1), .IE (1'b1), .PE (1'b1), .DS (1'b1),
+        .I   (VSS), .OEN (VDD), .IE (VDD), .PE (VDD), .DS (VDD),
         .VDD (VDD), .VSS(VSS), .VDDPST(VDDPST), .VSSPST(VSSPST), .POC(POC)
     );
 
     PRDW0812SCDG u_pad_mosi (
         .PAD (pad_mosi), .C (mosi_i),
-        .I   (1'b0), .OEN (1'b1), .IE (1'b1), .PE (1'b1), .DS (1'b1),
+        .I   (VSS), .OEN (VDD), .IE (VDD), .PE (VDD), .DS (VDD),
         .VDD (VDD), .VSS(VSS), .VDDPST(VDDPST), .VSSPST(VSSPST), .POC(POC)
     );
 
     // ---- miso, tri-state ----
     PRDW0812SCDG u_pad_miso (
         .PAD (pad_miso), .C (),
-        .I   (miso_o), .OEN (miso_oen), .IE (1'b0), .PE (1'b0), .DS (1'b0),
+        .I   (miso_o), .OEN (miso_oen), .IE (VSS), .PE (VSS), .DS (VSS),
         .VDD (VDD), .VSS(VSS), .VDDPST(VDDPST), .VSSPST(VSSPST), .POC(POC)
     );
 
