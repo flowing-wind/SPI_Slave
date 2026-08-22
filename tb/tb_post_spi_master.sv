@@ -66,7 +66,6 @@ module tb_post_spi_master(
         sck = 1'b1;
         #(T/2);
         sck = 1'b0;
-        #(T/2);
     endtask
 
     task automatic transfer_frame(
@@ -246,7 +245,9 @@ module tb_post_spi_master(
     //  Start.
     // -------------------------------
     initial begin
+        #500; // 0.5us
         t0_wave();
+        #500; // 0.5us
         $finish;
     end
 
