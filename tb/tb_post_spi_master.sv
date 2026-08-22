@@ -1,69 +1,18 @@
 // ============================================================================
-//  tb_spi_slave.sv      v1.0
+//  tb_post_spi_master.sv      v1.0
 //  
-//  SPI SLAVE TESTBENCH     BY Eric Yang    2026.08
+//  SPI SLAVE TESTBENCH POST     BY Eric Yang    2026.08
 // ============================================================================
 
 `timescale 1ns/1ps
 
-module tb_spi_slave;
-    
-    // -------------------------------
-    //  Device Under Test.
-    // -------------------------------
-    logic rst_n, ssn, sck, mosi;
-    wire  miso, miso_oen;
-
-    spi_slave dut (
-        .rst_n      (rst_n),
-        .ssn        (ssn),
-        .sck        (sck),
-        .mosi       (mosi),
-        .miso       (miso),
-        .miso_oen   (miso_oen)
-    );
-
-    // -------------------------------
-    //  Covergroups.
-    // -------------------------------
-    localparam int REG_N = 8;
-    covergroup cg_frame_t with function sample(
-        bit rw,
-        bit [6:0]  addr,
-        bit [15:0] data
-    );
-        option.per_instance = 1;
-
-        // Cover both read and write
-        cp_rw : coverpoint rw {
-            bins write = {1'b0};
-            bins read  = {1'b1};
-        }
-
-        // Cover all 8 regs
-        cp_addr : coverpoint addr[2:0] {
-            bins reg_n[] = {[0:REG_N-1]};
-        }
-
-        // Cover arbitrary addr_hi
-        cp_arb_addr : coverpoint (addr[6:3] != 4'h0) {
-            bins normal  = {1'b0};
-            bins aliased = {1'b1};
-        }
-
-        // Cover data with boundary conditions
-        cp_data : coverpoint data iff (!rw) {   // Write data only
-            bins all_zeros = {16'h0000};
-            bins all_ones  = {16'hFFFF};
-            bins others[4] = {[16'h0001:16'hFFFE]};
-        }
-
-        // All regs should be both read and written
-        cx_rw_addr : cross cp_rw, cp_addr;
-
-    endgroup
-    cg_frame_t cg_frame;
-
+module tb_post_spi_master(
+    output logic sck   = 1'b0,
+    output logic ssn   = 1'b1,
+    output logic mosi  = 1'b0,
+    output logic rst_n = 1'b1,
+    input  wire  miso
+);
     // -------------------------------
     //  Tasks.
     // -------------------------------
@@ -82,6 +31,7 @@ module tb_spi_slave;
     endtask
 
     localparam int T = 100; // 10MHz
+    localparam int REG_N = 8;
     logic [15:0] ref_mem [REG_N];   // Reference mem
     task automatic reset_dut();
         rst_n = 1'b0; ssn = 1'b1; sck = 1'b0; mosi = 1'b0;
@@ -104,11 +54,14 @@ module tb_spi_slave;
     endtask
 
     // Drive MOSI and read MISO
+    localparam int T_MOSI = 3;  // 3ns after the falling edge (EXT_DLY)
     task automatic sck_tick(
         input  logic tx_bit,
         output logic rx_bit
     );
+        #(T_MOSI);  
         mosi = tx_bit;
+        #(T/2 - T_MOSI);
         rx_bit = miso;
         sck = 1'b1;
         #(T/2);
@@ -142,7 +95,6 @@ module tb_spi_slave;
         if (data_valid) begin
             if (!rw) ref_mem[addr_lo] = wdata;
             exp = rw ? {8'h00, ref_mem[addr_lo]} : 24'h000_000;
-            cg_frame.sample(rw, addr, wdata);
             check($sformatf("%s addr=%02h", rw ? "READ " : "WRITE", addr), rx, exp);
         end
     endtask
@@ -291,57 +243,12 @@ module tb_spi_slave;
     endtask
 
     // -------------------------------
-    //  SVA.
-    // -------------------------------
-    logic refclk = 1'b0;
-    always #1 refclk = ~refclk;
-
-    // Enable MISO when ssn is low
-    a_oen : assert property (@(posedge refclk) miso_oen === ssn)
-    else begin errors++; $error("[%0t] a_oen: miso_oen=%b ssn=%b", $time, miso_oen, ssn); end
-
-    // MISO = 0 when ssn is high
-    a_miso_idle : assert property (@(posedge refclk) (ssn === 1'b1) |-> (miso === 1'b0))
-    else begin errors++; $error("[%0t] a_miso_idle: miso=%b", $time, miso); end
-
-    // MISO = 0 when rst_n is active
-    a_miso_rst : assert property (@(posedge refclk) (rst_n === 1'b0) |-> (miso === 1'b0))
-    else begin errors++; $error("[%0t] a_miso_rst: miso=%b", $time, miso); end
-
-    // -------------------------------
     //  Start.
     // -------------------------------
     initial begin
-        string test;
-        cg_frame = new();
-        if (!$value$plusargs("TEST=%s", test)) test = "all";
-        case (test)
-            "wave" : t0_wave();
-            "t1"   : t1_reset_check();
-            "t2"   : t2_all_zeros_2_all_ones();
-            "t3"   : t3_abort_transmission(50);
-            "rnd"  : random_transfer(500);
-            default: begin
-                reset_dut();
-                t1_reset_check();
-                t2_all_zeros_2_all_ones();
-                t3_abort_transmission(50);
-                random_transfer(500);
-            end
-        endcase
-
+        t0_wave();
         $finish;
     end
-
-    `ifdef FSDB_ON
-        initial begin
-            if ($test$plusargs("FSDB")) begin
-                $fsdbDumpfile("wave.fsdb");
-                $fsdbDumpvars(0, tb_spi_slave);
-                $fsdbDumpMDA();
-            end
-        end
-    `endif
 
     initial begin
         #200_000_000;
@@ -350,7 +257,6 @@ module tb_spi_slave;
 
     final begin
         $display("");
-        $display("  functional coverage = %0.2f %%", cg_frame.get_inst_coverage());
         $display("  checks = %0d   errors = %0d   %s", checks, errors, (errors == 0) ? "*** PASS ***" : "*** FAIL ***");
     end
 
