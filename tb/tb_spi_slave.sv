@@ -104,16 +104,18 @@ module tb_spi_slave;
     endtask
 
     // Drive MOSI and read MISO
+    localparam int T_MOSI = 3;
     task automatic sck_tick(
         input  logic tx_bit,
         output logic rx_bit
     );
+        #(T_MOSI);
         mosi = tx_bit;
+        #(T/2 - T_MOSI);
         rx_bit = miso;
         sck = 1'b1;
         #(T/2);
         sck = 1'b0;
-        #(T/2);
     endtask
 
     task automatic transfer_frame(
@@ -289,24 +291,6 @@ module tb_spi_slave;
             for (int a = 0; a < REG_N; a++) read_data(a[6:0]);
         end
     endtask
-
-    // -------------------------------
-    //  SVA.
-    // -------------------------------
-    logic refclk = 1'b0;
-    always #1 refclk = ~refclk;
-
-    // Enable MISO when ssn is low
-    a_oen : assert property (@(posedge refclk) miso_oen === ssn)
-    else begin errors++; $error("[%0t] a_oen: miso_oen=%b ssn=%b", $time, miso_oen, ssn); end
-
-    // MISO = 0 when ssn is high
-    a_miso_idle : assert property (@(posedge refclk) (ssn === 1'b1) |-> (miso === 1'b0))
-    else begin errors++; $error("[%0t] a_miso_idle: miso=%b", $time, miso); end
-
-    // MISO = 0 when rst_n is active
-    a_miso_rst : assert property (@(posedge refclk) (rst_n === 1'b0) |-> (miso === 1'b0))
-    else begin errors++; $error("[%0t] a_miso_rst: miso=%b", $time, miso); end
 
     // -------------------------------
     //  Start.

@@ -1,0 +1,1 @@
+To perform gate-level sim, copy _lvs.v and _minmax.sdf into current directory.

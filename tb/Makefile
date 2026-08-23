@@ -27,7 +27,7 @@ PLI   ?= -P $(VERDI_HOME)/share/PLI/VCS/LINUX64/novas.tab \
 build = mkdir -p $(SIM)/$(1) && cd $(SIM)/$(1) && \
         $(VCS) $(2) $(SRCS) -o simv -Mdir=csrc -l comp.log
 
-.PHONY: lint comp run wave verdi cov regress clean
+.PHONY: lint comp run wave verdi cov regress gls gls_all clean
 
 lint:
 	mkdir -p $(SIM)/lint && cd $(SIM)/lint && $(VCS) +lint=all,noVCDE \
@@ -74,5 +74,33 @@ regress:
 	cd $(SIM)/regress && urg -dir simv.vdb -report report -format both >/dev/null; \
 	echo "  merged -> $(SIM)/regress/report/dashboard.html"; exit $$rc
 
+# ---- Gate-level sim: Innovus netlist + SDF ----------------------------------
+# spi_slave_lvs.v and spi_slave_minmax.sdf are copied from post/Innovus/outputs
+# into tb/ ; paths below are as seen from sim/<target>/ like SRCS above.
+# CORNER=max -> ss/125C/1.62V (setup side)   CORNER=min -> ff/0C/1.98V (hold side)
+TSMC     ?= /home/yangh/project/PDK/TSMCHOME/digital
+GATE_LIB := $(TSMC)/Front_End/verilog/tcb018gbwp7t_270a/tcb018gbwp7t.v
+GATE_NET := ../../spi_slave_lvs.v
+GATE_SDF := ../../spi_slave_minmax.sdf
+GATE_TB  := ../../tb_spi_slave.sv
+CORNER   ?= max
+# -sdf      : annotate at compile time, no $sdf_annotate needed in the TB
+# +neg_tchk : keep the negative setup/recovery limits instead of clamping to 0
+GLS_OPT  := +neg_tchk -sdf $(CORNER):$(TOP).dut:$(GATE_SDF)
+GLS_LOG  := $(SIM)/gls_$(CORNER)/run_$(TEST)_$(SEED).log
+
+gls:
+	mkdir -p $(SIM)/gls_$(CORNER) && cd $(SIM)/gls_$(CORNER) && \
+	  $(VCS) $(GLS_OPT) -v $(GATE_LIB) $(GATE_NET) $(GATE_TB) \
+	    -o simv -Mdir=csrc -l comp.log && \
+	  ./simv +TEST=$(TEST) +ntb_random_seed=$(SEED) -l run_$(TEST)_$(SEED).log
+	@grep -E "checks =" $(GLS_LOG)
+	@echo "  timing violations = $$(grep -c 'Timing violation' $(GLS_LOG))"
+	@! grep -q -E "FAIL|Timing violation" $(GLS_LOG)
+
+gls_all:
+	$(MAKE) gls CORNER=max
+	$(MAKE) gls CORNER=min
+	
 clean:
 	rm -rf $(SIM)
