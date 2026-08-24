@@ -8,7 +8,7 @@
 //  - MSB first
 //  - Back to back transfer support
 //  - 8 x 16-bit registers available
-//  - Get read content in one frame
+//  - Read data within the same frame
 //  - No system clock
 //  - 24-bit self-defined frame protocol
 //
